@@ -1,0 +1,37 @@
+version: "3"
+services:
+  web:
+    build:
+      context: ./
+      dockerfile: ./Dockerfile
+    container_name: your-app-name
+    depends_on: 
+      - db
+    volumes: 
+      - ./:/var/www/html
+    ports:
+      - 7861:80
+  mysql:
+    container_name: your-db-container-name
+    image: mysql:8.0
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: your-root-password
+      MYSQL_DATABASE: sample_db
+      MYSQL_USER: your-user
+      MYSQL_PASSWORD: your-password
+    ports: 
+      - 7862:3306
+  phpmyadmin:
+    container_name: huzaifaapp-phpmyadmin
+    image: phpmyadmin/phpmyadmin:latest
+    depends_on:
+      - mysql
+    ports:
+      - 7863:80
+    environment: 
+      PMA_HOST: mysql8
+      PMA_PORT: 3306
+    volumes:
+      - /sessions
